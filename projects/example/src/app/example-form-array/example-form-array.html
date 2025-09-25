@@ -1,0 +1,110 @@
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+  <!-- Form Column -->
+  <div class="bg-white shadow-xl rounded-lg p-8">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">Dynamic Form Array Example</h2>
+    <p class="text-gray-600 mb-6">
+      This form demonstrates how to handle dynamic form arrays with template-driven forms and
+      Vest.js validation.
+    </p>
+
+    <form #form="ngForm" (ngSubmit)="onSubmit()" class="space-y-6" novalidate>
+      <!-- Dynamic Interests Section -->
+      <div>
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Your Interests</h3>
+
+        <!-- Add Interest Input -->
+        <div class="mb-4">
+          <div class="flex gap-3">
+            <div class="flex-1">
+              <input
+                id="addInterest"
+                type="text"
+                name="addInterest"
+                [ngModel]="formValue().addInterest"
+                (ngModelChange)="setValue('addInterest', $event)"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                placeholder="Enter a new interest"
+                (keydown.enter)="$event.preventDefault(); addInterest()"
+              />
+            </div>
+            <button
+              type="button"
+              (click)="addInterest()"
+              class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200 flex items-center gap-2"
+            >
+              <span>+</span>
+              Add Interest
+            </button>
+          </div>
+        </div>
+
+        <!-- Interests List with ngModelGroup -->
+        <div ngModelGroup="interests">
+          @if (formValue().interests && getInterestsCount() > 0) {
+            <div class="space-y-3">
+              <p class="text-sm text-gray-600 mb-3">Your interests ({{ getInterestsCount() }}):</p>
+              @for (item of formValue().interests | keyvalue; track tracker($index)) {
+                <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-md">
+                  <div class="flex-1">
+                    <input
+                      type="text"
+                      [ngModel]="formValue().interests![item.key]"
+                      [name]="item.key"
+                      (ngModelChange)="setValue('interests.' + item.key, $event)"
+                      [class.border-red-500]="showInterestError(item.key)"
+                      [class.border-green-500]="
+                        !hasInterestError(item.key) && formValue().interests![item.key]
+                      "
+                      class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                    />
+
+                    @if (showInterestError(item.key)) {
+                      @let errors = getInterestErrors(item.key);
+                      @for (error of errors; track error) {
+                        <p class="mt-1 text-sm text-red-600">{{ error }}</p>
+                      }
+                    }
+                  </div>
+                  <button
+                    type="button"
+                    (click)="removeInterest(item.key)"
+                    class="px-3 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-200 flex items-center"
+                  >
+                    ×
+                  </button>
+                </div>
+              }
+            </div>
+          } @else {
+            <div
+              class="text-center py-8 bg-gray-50 rounded-md border-2 border-dashed border-gray-300"
+            >
+              <p class="text-gray-500">No interests added yet. Add your first interest above!</p>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="flex gap-4 pt-6">
+        <button
+          type="submit"
+          class="flex-1 px-6 py-3 bg-green-600 text-white font-medium rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors duration-200"
+        >
+          Submit Form
+        </button>
+
+        <button
+          type="button"
+          (click)="formValue.set({})"
+          class="px-6 py-3 bg-gray-600 text-white font-medium rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors duration-200"
+        >
+          Reset
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Debugger Column -->
+  <app-debugger [formValue]="formValue()" [minivest]="minivest()" [ngForm]="ngForm()" />
+</div>

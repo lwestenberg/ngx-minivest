@@ -1,0 +1,253 @@
+<div class="max-w-6xl mx-auto mt-8 space-y-6">
+  <h2 class="text-2xl font-bold text-left text-blue-600">Nested Form Example</h2>
+  <p class="text-gray-600">
+    This form demonstrates ngModelGroup for nested form fields with Vest.js validation.
+  </p>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+    <!-- Form Column -->
+    <div class="p-6 bg-white rounded-lg shadow-lg">
+      <form (ngSubmit)="onSubmit()" class="space-y-6" #ngForm="ngForm">
+        <!-- Personal Information Section -->
+        <fieldset ngModelGroup="personalInfo" #personalInfoGroup="ngModelGroup" class="space-y-4">
+          <legend class="text-lg font-semibold text-gray-800 border-b pb-2 mb-4">
+            Personal Information
+          </legend>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-gray-700" for="firstName">
+                First Name:
+              </label>
+              <input
+                type="text"
+                id="firstName"
+                name="firstName"
+                [ngModel]="formValue().personalInfo?.firstName"
+                (ngModelChange)="setValue('personalInfo.firstName', $event)"
+                placeholder="Enter first name"
+                class="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                [class.border-red-500]="minivest().showErrors('personalInfo.firstName')"
+                [class.border-gray-300]="!minivest().showErrors('personalInfo.firstName')"
+              />
+
+              @if (minivest().showErrors('personalInfo.firstName')) {
+                <div class="text-sm text-red-600">
+                  <strong>Vest:</strong> {{ minivest().getErrors('personalInfo.firstName')[0] }}
+                </div>
+              }
+            </div>
+
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-gray-700" for="lastName">
+                Last Name:
+              </label>
+              <input
+                type="text"
+                id="lastName"
+                name="lastName"
+                [ngModel]="formValue().personalInfo?.lastName"
+                (ngModelChange)="setValue('personalInfo.lastName', $event)"
+                placeholder="Enter last name"
+                class="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                [class.border-red-500]="minivest().showErrors('personalInfo.lastName')"
+                [class.border-gray-300]="!minivest().showErrors('personalInfo.lastName')"
+              />
+
+              @if (minivest().showErrors('personalInfo.lastName')) {
+                <div class="text-sm text-red-600">
+                  <strong>Vest:</strong> {{ minivest().getErrors('personalInfo.lastName')[0] }}
+                </div>
+              }
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700" for="email">
+              Email Address:
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              [ngModel]="formValue().personalInfo?.email"
+              (ngModelChange)="setValue('personalInfo.email', $event)"
+              placeholder="Enter email address"
+              class="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              [class.border-red-500]="minivest().showErrors('personalInfo.email')"
+              [class.border-gray-300]="!minivest().showErrors('personalInfo.email')"
+            />
+
+            @if (minivest().showErrors('personalInfo.email')) {
+              <div class="text-sm text-red-600">
+                <strong>Vest:</strong> {{ minivest().getErrors('personalInfo.email')[0] }}
+              </div>
+            }
+          </div>
+        </fieldset>
+
+        <!-- Address Information Section -->
+        <fieldset ngModelGroup="addressInfo" #addressInfoGroup="ngModelGroup" class="space-y-4">
+          <legend class="text-lg font-semibold text-gray-800 border-b pb-2 mb-4">
+            Address Information
+          </legend>
+
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700" for="street">
+              Street Address:
+            </label>
+            <input
+              type="text"
+              id="street"
+              name="street"
+              [ngModel]="formValue().addressInfo?.street"
+              (ngModelChange)="setValue('addressInfo.street', $event)"
+              placeholder="Enter street address"
+              class="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              [class.border-red-500]="minivest().showErrors('addressInfo.street')"
+              [class.border-gray-300]="!minivest().showErrors('addressInfo.street')"
+              #streetInput="ngModel"
+            />
+
+            @if (minivest().showErrors('addressInfo.street')) {
+              <div class="text-sm text-red-600">
+                <strong>Vest:</strong> {{ minivest().getErrors('addressInfo.street')[0] }}
+              </div>
+            }
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-gray-700" for="city"> City: </label>
+              <input
+                type="text"
+                id="city"
+                name="city"
+                [ngModel]="formValue().addressInfo?.city"
+                (ngModelChange)="setValue('addressInfo.city', $event)"
+                placeholder="Enter city"
+                class="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                [class.border-red-500]="minivest().showErrors('addressInfo.city')"
+                [class.border-gray-300]="!minivest().showErrors('addressInfo.city')"
+                #cityInput="ngModel"
+              />
+
+              @if (minivest().showErrors('addressInfo.city')) {
+                <div class="text-sm text-red-600">
+                  <strong>Vest:</strong> {{ minivest().getErrors('addressInfo.city')[0] }}
+                </div>
+              }
+            </div>
+
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-gray-700" for="zipCode">
+                ZIP Code:
+              </label>
+              <input
+                type="text"
+                id="zipCode"
+                name="zipCode"
+                [ngModel]="formValue().addressInfo?.zipCode"
+                (ngModelChange)="setValue('addressInfo.zipCode', $event)"
+                placeholder="12345 or 12345-6789"
+                class="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                [class.border-red-500]="minivest().showErrors('addressInfo.zipCode')"
+                [class.border-gray-300]="!minivest().showErrors('addressInfo.zipCode')"
+                #zipCodeInput="ngModel"
+              />
+
+              @if (minivest().showErrors('addressInfo.zipCode')) {
+                <div class="text-sm text-red-600">
+                  <strong>Vest:</strong> {{ minivest().getErrors('addressInfo.zipCode')[0] }}
+                </div>
+              }
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700" for="country"> Country: </label>
+            <select
+              id="country"
+              name="country"
+              [ngModel]="formValue().addressInfo?.country"
+              (ngModelChange)="setValue('addressInfo.country', $event)"
+              class="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              [class.border-red-500]="minivest().showErrors('addressInfo.country')"
+              [class.border-gray-300]="!minivest().showErrors('addressInfo.country')"
+              #countryInput="ngModel"
+            >
+              <option value="">Select a country</option>
+              <option value="US">United States</option>
+              <option value="CA">Canada</option>
+              <option value="UK">United Kingdom</option>
+              <option value="DE">Germany</option>
+              <option value="FR">France</option>
+              <option value="NL">Netherlands</option>
+              <option value="OTHER">Other</option>
+            </select>
+
+            @if (minivest().showErrors('addressInfo.country')) {
+              <div class="text-sm text-red-600">
+                <strong>Vest:</strong> {{ minivest().getErrors('addressInfo.country')[0] }}
+              </div>
+            }
+          </div>
+
+          @if (addressInfoGroup.invalid && (addressInfoGroup.touched || ngForm.submitted)) {
+            <div class="text-sm text-orange-600 bg-orange-50 p-2 rounded">
+              <strong>NgForm Group:</strong> Address Info has validation errors
+            </div>
+          }
+        </fieldset>
+
+        <!-- Preferences Section -->
+        <fieldset ngModelGroup="preferences" #preferencesGroup="ngModelGroup" class="space-y-4">
+          <legend class="text-lg font-semibold text-gray-800 border-b pb-2 mb-4">
+            Preferences
+          </legend>
+
+          <div class="space-y-3">
+            <!-- <div class="flex items-center space-x-2">
+              <input 
+                type="checkbox" 
+                id="newsletter"
+                name="newsletter"
+                [ngModel]="formValue().preferences?.newsletter"
+                (ngModelChange)="setValue('preferences.newsletter', $event)"
+                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                #newsletterInput="ngModel" />
+              <label class="text-sm font-medium text-gray-700" for="newsletter">
+                Subscribe to newsletter
+              </label>
+            </div> -->
+
+            <!-- <div class="flex items-center space-x-2">
+              <input 
+                type="checkbox" 
+                id="notifications"
+                name="notifications"
+                [ngModel]="formValue().preferences.notifications"
+                (ngModelChange)="setValue('preferences.notifications', $event)"
+                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                />
+              <label class="text-sm font-medium text-gray-700" for="notifications">
+                Enable email notifications
+              </label>
+            </div> -->
+          </div>
+        </fieldset>
+
+        <button
+          type="submit"
+          class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-medium py-2 px-4 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        >
+          Submit Nested Form
+        </button>
+      </form>
+    </div>
+
+    <!-- Debugger Column -->
+    <app-debugger [formValue]="formValue()" [ngForm]="ngForm" [minivest]="minivest()">
+    </app-debugger>
+  </div>
+</div>

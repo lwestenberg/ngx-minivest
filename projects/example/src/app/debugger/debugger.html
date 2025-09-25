@@ -1,0 +1,154 @@
+<div class="p-6 bg-white rounded-lg shadow-lg">
+  <h3 class="text-xl font-semibold mb-4 text-blue-600">Form State & Validation:</h3>
+
+  <details class="bg-white mb-4 rounded-lg border" open>
+    <summary class="px-4 py-3 text-lg font-medium cursor-pointer hover:bg-gray-50 rounded-lg">
+      Form Value (Signal)
+    </summary>
+    <div class="px-4 pb-4">
+      <div
+        class="bg-blue-50 text-blue-900 p-4 rounded-md font-mono text-sm overflow-x-auto border border-blue-200"
+      >
+        <pre><code>{{ formValue() | json }}</code></pre>
+      </div>
+    </div>
+  </details>
+
+  @if (ngForm()) {
+    <details class="bg-white mb-4 rounded-lg border" open>
+      <summary class="px-4 py-3 text-lg font-medium cursor-pointer hover:bg-gray-50 rounded-lg">
+        NgForm State
+      </summary>
+      <div class="px-4 pb-4">
+        <div class="flex flex-wrap gap-2">
+          <div
+            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border"
+            [class.bg-green-100]="ngForm()?.valid"
+            [class.text-green-800]="ngForm()?.valid"
+            [class.border-green-300]="ngForm()?.valid"
+            [class.bg-red-100]="!ngForm()?.valid"
+            [class.text-red-800]="!ngForm()?.valid"
+            [class.border-red-300]="!ngForm()?.valid"
+          >
+            Valid: {{ ngForm()?.valid }}
+          </div>
+          <div
+            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border"
+            [class.bg-orange-100]="ngForm()?.dirty"
+            [class.text-orange-800]="ngForm()?.dirty"
+            [class.border-orange-300]="ngForm()?.dirty"
+            [class.bg-gray-100]="!ngForm()?.dirty"
+            [class.text-gray-800]="!ngForm()?.dirty"
+            [class.border-gray-300]="!ngForm()?.dirty"
+          >
+            Dirty: {{ !!ngForm()?.dirty }}
+          </div>
+          <div
+            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border"
+            [class.bg-blue-100]="ngForm()?.touched"
+            [class.text-blue-800]="ngForm()?.touched"
+            [class.border-blue-300]="ngForm()?.touched"
+            [class.bg-gray-100]="!ngForm()?.touched"
+            [class.text-gray-800]="!ngForm()?.touched"
+            [class.border-gray-300]="!ngForm()?.touched"
+          >
+            Touched: {{ !!ngForm()?.touched }}
+          </div>
+          <div
+            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border"
+            [class.bg-purple-100]="ngForm()?.submitted"
+            [class.text-purple-800]="ngForm()?.submitted"
+            [class.border-purple-300]="ngForm()?.submitted"
+            [class.bg-gray-100]="!ngForm()?.submitted"
+            [class.text-gray-800]="!ngForm()?.submitted"
+            [class.border-gray-300]="!ngForm()?.submitted"
+          >
+            Submitted: {{ !!ngForm()?.submitted }}
+          </div>
+        </div>
+      </div>
+    </details>
+  }
+
+  <details class="bg-white mb-4 rounded-lg border" open>
+    <summary class="px-4 py-3 text-lg font-medium cursor-pointer hover:bg-gray-50 rounded-lg">
+      Vest Validation State
+    </summary>
+    <div class="px-4 pb-4">
+      <div class="flex flex-wrap gap-2 mb-4">
+        <div
+          class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border"
+          [class.bg-red-100]="minivest().hasErrors()"
+          [class.text-red-800]="minivest().hasErrors()"
+          [class.border-red-300]="minivest().hasErrors()"
+          [class.bg-green-100]="!minivest().hasErrors()"
+          [class.text-green-800]="!minivest().hasErrors()"
+          [class.border-green-300]="!minivest().hasErrors()"
+        >
+          Valid: {{ minivest().valid }}
+        </div>
+        <div
+          class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800 border border-red-300"
+        >
+          Errors: {{ minivest().errorCount }}
+        </div>
+      </div>
+
+      @if (minivest().hasErrors()) {
+        <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+          <h5 class="font-semibold mb-2 text-red-800">Vest Validation Errors:</h5>
+          <div class="space-y-2">
+            @for (error of minivest().errors; track error.fieldName) {
+              <div
+                class="bg-red-100 text-red-800 p-3 rounded-md font-mono text-xs overflow-x-auto border border-red-200"
+              >
+                <pre><code>{{ error | json }}</code></pre>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </details>
+
+  <!-- Console Logs Section -->
+  <details class="bg-white rounded-lg border" open>
+    <summary class="px-4 py-3 text-lg font-medium cursor-pointer hover:bg-gray-50 rounded-lg">
+      Logs ({{ logger.logs().length }})
+    </summary>
+    <div class="px-4 pb-4">
+      @if (logger.logs().length === 0) {
+        <div class="text-center text-gray-500 py-8">
+          No logs yet. Interact with the form to see activity.
+        </div>
+      } @else {
+        <button
+          (click)="clearLogs(); $event.stopPropagation()"
+          class="mb-4 text-xs bg-red-100 hover:bg-red-200 text-red-700 px-2 py-1 rounded cursor-pointer"
+        >
+          Clear Logs
+        </button>
+
+        <div class="max-h-64 overflow-y-auto space-y-2">
+          @for (log of logger.logs().slice().reverse(); track log.timestamp) {
+            <div class="border rounded-md p-2 text-sm bg-blue-50 text-blue-900 border-blue-200">
+              <div class="flex items-center justify-between mb-1">
+                <div class="font-medium">{{ $count - $index }}: {{ log.message }}</div>
+                <span class="text-xs opacity-75">
+                  {{ log.timestamp | date: 'HH:mm:ss.SSS' }}
+                </span>
+              </div>
+              @if (log.data) {
+                <div
+                  class="mt-1 bg-blue-100 text-blue-800 border border-blue-200 bg-opacity-5 p-2 rounded text-xs font-mono overflow-x-auto"
+                >
+                  <pre>{{ log.data | json }}</pre>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </details>
+</div>

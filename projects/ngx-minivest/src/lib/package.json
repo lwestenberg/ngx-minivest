@@ -1,0 +1,38 @@
+{
+  "name": "ngx-minivest",
+  "version": "0.1.0",
+  "description": "Angular utilities for Vest.js form validation with signals",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "keywords": [
+    "angular",
+    "vest",
+    "validation",
+    "forms",
+    "signals",
+    "typescript"
+  ],
+  "author": "Lauren Westenberg",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lwestenberg/ngx-minivest.git",
+    "directory": "src/lib"
+  },
+  "peerDependencies": {
+    "@angular/core": ">=17.0.0",
+    "@angular/forms": ">=17.0.0",
+    "vest": ">=5.0.0"
+  },
+  "files": [
+    "*.js",
+    "*.d.ts",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@types/lodash.merge": "^4.6.9"
+  }
+}
