@@ -1,7 +1,7 @@
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
   <!-- Form Column -->
   <div class="bg-white shadow-xl rounded-lg p-8">
-    <h2 class="text-2xl font-bold text-gray-800 mb-6">Dynamic Form Array Example</h2>
+    <h2 class="text-2xl font-bold text-blue-600 mb-6">Dynamic Form Array Example</h2>
     <p class="text-gray-600 mb-6">
       This form demonstrates how to handle dynamic form arrays with template-driven forms and
       Vest.js validation.
@@ -23,9 +23,17 @@
                 [ngModel]="formValue().addInterest"
                 (ngModelChange)="setValue('addInterest', $event)"
                 class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                [class.border-red-500]="minivest().showErrors('addInterest')"
                 placeholder="Enter a new interest"
                 (keydown.enter)="$event.preventDefault(); addInterest()"
+                #addInterestInput="ngModel"
               />
+
+              @if (minivest().showErrors('addInterest')) {
+                <div class="text-sm text-red-600">
+                  <strong>Vest:</strong> {{ minivest().getErrors('addInterest')[0] }}
+                </div>
+              }
             </div>
             <button
               type="button"
@@ -56,12 +64,13 @@
                         !hasInterestError(item.key) && formValue().interests![item.key]
                       "
                       class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                      [attr.id]="'interest-' + item.key"
                     />
 
                     @if (showInterestError(item.key)) {
                       @let errors = getInterestErrors(item.key);
                       @for (error of errors; track error) {
-                        <p class="mt-1 text-sm text-red-600">{{ error }}</p>
+                        <p class="mt-1 text-sm text-red-600"><strong>Vest:</strong> {{ error }}</p>
                       }
                     }
                   </div>

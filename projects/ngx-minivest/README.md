@@ -1,6 +1,7 @@
 # ngx-minivest 🦺
 
-Angular utilities for [Vest.js](https://vestjs.dev) form validation with signals. Seamlessly integrate Vest.js declarative validation with Angular's reactive forms and signals.
+Angular utilities for [Vest.js](https://vestjs.dev) form validation # Validation helper - Signal Factory Function
+protected readonly validation = createMinivest(this.formValue, validationSuite, this.ngForm);th signals. Seamlessly integrate Vest.js declarative validation with Angular's reactive forms and signals.
 
 ## Features
 
@@ -98,7 +99,7 @@ export class MyFormComponent {
 
 ## API Reference
 
-### `createMinivest(formValue, suite, ngForm?)`
+### `createMinivest(formValue, suite, ngForm?)` - Signal Factory Function
 
 Creates a computed signal for Vest.js validation with Angular forms integration.
 
@@ -145,7 +146,7 @@ This approach gives you:
 
 - **Full control** over your form state
 - **Flexibility** to integrate with any state management pattern
-- **Simplicity** - just one function to learn
+- **Simplicity** - just one Signal Factory Function to learn
 - **Transparency** - no hidden state management
 
 ## Touch-aware Validation

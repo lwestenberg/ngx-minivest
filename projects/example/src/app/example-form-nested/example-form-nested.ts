@@ -3,17 +3,18 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { createMinivest, Path, PathValue } from 'ngx-minivest';
 import { Debugger } from '../debugger/debugger';
 import { LoggingService } from '../shared/logging.service';
-import { NestedFormModel } from './nested-form.model';
-import { nestedValidationSuite } from './nested-form.validation';
+import { NestedFormModel } from './example-form-nested.model';
+import { nestedValidationSuite } from './example-form-nested.validations';
 
 @Component({
-  selector: 'app-nested-form',
+  selector: 'app-example-form-nested',
   imports: [FormsModule, Debugger],
-  templateUrl: './nested-form.html',
+  templateUrl: './example-form-nested.html',
 })
-export class NestedForm {
+export class ExampleFormNested {
   protected readonly ngForm = viewChild(NgForm);
   protected readonly logger = inject(LoggingService);
+  protected readonly Object = Object; // Make Object available in template
 
   // Signal to hold nested form state (for UI structure)
   protected readonly formValue = signal<Partial<NestedFormModel>>({

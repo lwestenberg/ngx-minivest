@@ -56,9 +56,9 @@ protected readonly validation = createMinivest(
 ## Component Architecture
 
 - `App`: Root component with simple navigation layout
-- `ExampleForm`: Basic email verification form with Vest.js validation
+- `ExampleFormSimple`: Basic email verification form with Vest.js validation
 - `ExampleFormArray`: Dynamic form array with add/remove functionality
-- `NestedForm`: Complex nested object validation with deep paths
+- `ExampleFormNested`: Complex nested object validation with deep paths
 - `Debugger`: Development utility showing form/validation state in real-time
 - `LoggingService`: Signal-based logging with automatic memory management (50 log limit)
 
@@ -77,9 +77,9 @@ protected readonly validation = createMinivest(
 ## File Organization
 
 - `src/app/shared/`: Shared services (LoggingService)
-- `src/app/example-form/`: Simple form component + validation logic
+- `src/app/example-form-simple/`: Simple form component + validation logic
 - `src/app/example-form-array/`: Dynamic array form example
-- `src/app/nested-form/`: Nested object validation example
+- `src/app/example-form-nested/`: Nested object validation example
 - `src/app/debugger/`: Development debugging component
 - `projects/ngx-minivest/src/lib/`: Angular library with validation helpers
 - Form validation logic is separated into `.validation.ts` files

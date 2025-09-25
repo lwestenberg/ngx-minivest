@@ -16,7 +16,7 @@ This project shows how to build reactive forms in Angular using modern patterns:
 
 The demo includes three comprehensive form examples:
 
-### 1. Simple Form (`/simple-form`)
+### 1. Simple Form (`/form-simple`)
 
 - Email input with format validation
 - Confirm email input with matching validation
@@ -28,7 +28,7 @@ The demo includes three comprehensive form examples:
 - Individual validation for each array item
 - Array-level validation rules
 
-### 3. Nested Form (`/nested-form`)
+### 3. Nested Form (`/form-nested`)
 
 - Complex nested object validation
 - Deep path validation with dot notation

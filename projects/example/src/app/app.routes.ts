@@ -1,11 +1,11 @@
 import { Routes } from '@angular/router';
 import { ExampleFormArray } from './example-form-array/example-form-array';
-import { ExampleForm } from './example-form/example-form';
-import { NestedForm } from './nested-form/nested-form';
+import { ExampleFormNested } from './example-form-nested/example-form-nested';
+import { ExampleFormSimple } from './example-form-simple/example-form';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/simple-form', pathMatch: 'full' },
-  { path: 'simple-form', component: ExampleForm },
+  { path: '', redirectTo: '/form-simple', pathMatch: 'full' },
+  { path: 'form-simple', component: ExampleFormSimple },
   { path: 'form-array', component: ExampleFormArray },
-  { path: 'nested-form', component: NestedForm },
+  { path: 'form-nested', component: ExampleFormNested },
 ];

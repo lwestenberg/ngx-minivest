@@ -10,10 +10,14 @@ import { MinivestRunResult, Path, PathValue } from './types';
  * and returns a signal containing the validation result, error display logic, and
  * a setValue function (if the form value signal is writable).
  *
+ * When an NgForm is provided, it automatically syncs Vest.js validation errors
+ * directly to the Angular form controls, creating a seamless integration between
+ * Vest.js validation and Angular's template-driven forms.
+ *
  * @typeParam FormModel - The type representing the form's data model.
  * @param formValue - A signal holding the current (partial) form value.
  * @param validationSuite - The static validation suite to run against the form value.
- * @param ngForm - (Optional) A signal holding the Angular form instance, used for touched state.
+ * @param ngForm - (Optional) A signal holding the Angular form instance, used for touched state and error sync.
  * @returns A signal containing the Minivest validation result, error display logic, and setValue function.
  */
 export function createMinivest<FormModel>(
@@ -24,6 +28,11 @@ export function createMinivest<FormModel>(
   return computed((): MinivestRunResult<FormModel> => {
     const result = validationSuite(formValue());
     const form = ngForm?.();
+
+    // Sync validation errors to NgForm if provided
+    if (form?.form) {
+      syncValidationErrorsToNgForm(form, result);
+    }
 
     // Create setValue function using the helper, but only if formValue is writable
     const setValue = isWritableSignal(formValue)
@@ -106,4 +115,29 @@ function createSetValue<FormModel>(
  */
 function isWritableSignal<T>(signal: Signal<T>): signal is WritableSignal<T> {
   return 'set' in signal && typeof (signal as WritableSignal<T>).set === 'function';
+}
+
+/**
+ * Syncs Vest.js validation errors directly to NgForm controls.
+ * This sets the validation errors from Vest.js onto the corresponding form controls,
+ * maintaining the same structure as Vest.js validation results.
+ */
+function syncValidationErrorsToNgForm(ngForm: NgForm, vestResult: any): void {
+  const form = ngForm.form;
+
+  // Set validation errors directly from Vest.js results
+  Object.keys(form.controls).forEach((fieldName) => {
+    const control = form.get(fieldName);
+    if (control) {
+      // Set errors directly from Vest.js (null if no errors)
+      if (vestResult.hasErrors(fieldName)) {
+        const errors = vestResult.getErrors(fieldName);
+        // Use 'vest' as the error key with the actual error message as the value
+        // This keeps it simple and maintains the Vest.js error structure
+        control.setErrors({ vest: errors[0] || 'Validation failed' });
+      } else {
+        control.setErrors(null);
+      }
+    }
+  });
 }

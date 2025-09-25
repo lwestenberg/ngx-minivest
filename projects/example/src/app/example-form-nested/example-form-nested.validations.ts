@@ -1,5 +1,5 @@
 import { enforce, only, staticSuite, test } from 'vest';
-import { NestedFormModel } from './nested-form.model';
+import { NestedFormModel } from './example-form-nested.model';
 
 export const nestedValidationSuite = staticSuite(
   (model: Partial<NestedFormModel>, field?: string) => {

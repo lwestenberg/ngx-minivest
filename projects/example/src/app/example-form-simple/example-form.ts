@@ -1,4 +1,3 @@
-import { JsonPipe } from '@angular/common';
 import { Component, inject, model, viewChild } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { createMinivest, Path, PathValue } from 'ngx-minivest';
@@ -8,11 +7,11 @@ import { FormModel } from './example-form.model';
 import { validationSuite } from './example-form.validation';
 
 @Component({
-  selector: 'app-example-form',
-  imports: [FormsModule, JsonPipe, Debugger],
+  selector: 'app-example-form-simple',
+  imports: [FormsModule, Debugger],
   templateUrl: './example-form.html',
 })
-export class ExampleForm {
+export class ExampleFormSimple {
   protected readonly ngForm = viewChild(NgForm);
   protected readonly logger = inject(LoggingService);
 

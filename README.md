@@ -16,7 +16,7 @@ This project shows how to build reactive forms in Angular using modern patterns:
 
 The demo includes three comprehensive form examples:
 
-### 1. Simple Form (`/simple-form`)
+### 1. Simple Form (`/formsimple`)
 
 - Email input with format validation
 - Confirm email input with matching validation
@@ -28,7 +28,7 @@ The demo includes three comprehensive form examples:
 - Individual validation for each array item
 - Array-level validation rules
 
-### 3. Nested Form (`/nested-form`)
+### 3. Nested Form (`/form-nested`)
 
 - Complex nested object validation
 - Deep path validation with dot notation
@@ -97,14 +97,14 @@ projects/
 │       └── app.ts                  # Root standalone component
 └── ngx-minivest/           # Angular library
     └── src/lib/
-        ├── helpers.ts              # Main createMinivest function
+        ├── helpers.ts              # Main createMinivest Signal Factory Function
         ├── types.ts                # TypeScript definitions
         └── index.ts                # Public API exports
 ```
 
 ## What You'll Learn
 
-- How to integrate Vest.js with Angular signals using `createMinivest`
+- How to integrate Vest.js with Angular signals using the `createMinivest` Signal Factory Function
 - Performance optimization patterns for form validation
 - Modern Angular standalone component architecture
 - Touch-aware error display patterns for better UX
