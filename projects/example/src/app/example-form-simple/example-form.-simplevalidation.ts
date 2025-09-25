@@ -1,5 +1,5 @@
 import { enforce, only, staticSuite, test } from 'vest';
-import { FormModel } from './example-form.model';
+import { FormModel } from './example-form-simple.model';
 
 export const validationSuite = staticSuite((model: Partial<FormModel>, field?: string) => {
   if (field) {

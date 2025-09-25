@@ -3,13 +3,13 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { createMinivest, Path, PathValue } from 'ngx-minivest';
 import { Debugger } from '../debugger/debugger';
 import { LoggingService } from '../shared/logging.service';
-import { FormModel } from './example-form.model';
-import { validationSuite } from './example-form.validation';
+import { FormModel } from './example-form-simple.model';
+import { validationSuite } from './example-form.-simplevalidation';
 
 @Component({
   selector: 'app-example-form-simple',
   imports: [FormsModule, Debugger],
-  templateUrl: './example-form.html',
+  templateUrl: './example-form-simple.html',
 })
 export class ExampleFormSimple {
   protected readonly ngForm = viewChild(NgForm);
