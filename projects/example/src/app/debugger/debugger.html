@@ -14,62 +14,6 @@
     </div>
   </details>
 
-  @if (ngForm()) {
-    <details class="bg-white mb-4 rounded-lg border" open>
-      <summary class="px-4 py-3 text-lg font-medium cursor-pointer hover:bg-gray-50 rounded-lg">
-        NgForm State
-      </summary>
-      <div class="px-4 pb-4">
-        <div class="flex flex-wrap gap-2">
-          <div
-            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border"
-            [class.bg-green-100]="ngForm()?.valid"
-            [class.text-green-800]="ngForm()?.valid"
-            [class.border-green-300]="ngForm()?.valid"
-            [class.bg-red-100]="!ngForm()?.valid"
-            [class.text-red-800]="!ngForm()?.valid"
-            [class.border-red-300]="!ngForm()?.valid"
-          >
-            Valid: {{ ngForm()?.valid }}
-          </div>
-          <div
-            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border"
-            [class.bg-orange-100]="ngForm()?.dirty"
-            [class.text-orange-800]="ngForm()?.dirty"
-            [class.border-orange-300]="ngForm()?.dirty"
-            [class.bg-gray-100]="!ngForm()?.dirty"
-            [class.text-gray-800]="!ngForm()?.dirty"
-            [class.border-gray-300]="!ngForm()?.dirty"
-          >
-            Dirty: {{ !!ngForm()?.dirty }}
-          </div>
-          <div
-            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border"
-            [class.bg-blue-100]="ngForm()?.touched"
-            [class.text-blue-800]="ngForm()?.touched"
-            [class.border-blue-300]="ngForm()?.touched"
-            [class.bg-gray-100]="!ngForm()?.touched"
-            [class.text-gray-800]="!ngForm()?.touched"
-            [class.border-gray-300]="!ngForm()?.touched"
-          >
-            Touched: {{ !!ngForm()?.touched }}
-          </div>
-          <div
-            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border"
-            [class.bg-purple-100]="ngForm()?.submitted"
-            [class.text-purple-800]="ngForm()?.submitted"
-            [class.border-purple-300]="ngForm()?.submitted"
-            [class.bg-gray-100]="!ngForm()?.submitted"
-            [class.text-gray-800]="!ngForm()?.submitted"
-            [class.border-gray-300]="!ngForm()?.submitted"
-          >
-            Submitted: {{ !!ngForm()?.submitted }}
-          </div>
-        </div>
-      </div>
-    </details>
-  }
-
   <details class="bg-white mb-4 rounded-lg border" open>
     <summary class="px-4 py-3 text-lg font-medium cursor-pointer hover:bg-gray-50 rounded-lg">
       Vest Validation State

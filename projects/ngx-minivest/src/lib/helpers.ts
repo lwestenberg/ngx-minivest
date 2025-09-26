@@ -1,38 +1,31 @@
-import { computed, isDevMode, type Signal, type WritableSignal } from '@angular/core';
-import type { NgForm } from '@angular/forms';
+import { computed, isDevMode, signal, type Signal, type WritableSignal } from '@angular/core';
 import type { StaticSuite } from 'vest';
 import { MinivestRunResult, Path, PathValue } from './types';
 
 /**
- * Creates a reactive Minivest validation result signal for a given form model.
+ * Creates a reactive Minivest form handler for managing form state, validation, and field interactions.
  *
- * This function runs the provided validation suite against the current form value,
- * and returns a signal containing the validation result, error display logic, and
- * a setValue function (if the form value signal is writable).
+ * @template FormModel - The type representing the form's data model.
+ * @param formValue - A signal containing the current form values as a partial model.
+ * @param validationSuite - A static validation suite function that validates the form values.
+ * @returns A computed signal containing the Minivest run result, including validation state, touched fields,
+ *          and helper functions for setting field values and marking fields as touched.
  *
- * When an NgForm is provided, it automatically syncs Vest.js validation errors
- * directly to the Angular form controls, creating a seamless integration between
- * Vest.js validation and Angular's template-driven forms.
- *
- * @typeParam FormModel - The type representing the form's data model.
- * @param formValue - A signal holding the current (partial) form value.
- * @param validationSuite - The static validation suite to run against the form value.
- * @param ngForm - (Optional) A signal holding the Angular form instance, used for touched state and error sync.
- * @returns A signal containing the Minivest validation result, error display logic, and setValue function.
+ * @remarks
+ * - If `formValue` is a writable signal, the returned object includes a `setValue` function to update field values.
+ * - If `formValue` is readonly, `setValue` will log a warning in development mode and perform no action.
+ * - The `setTouched` function marks a field as touched, updating the internal touched fields state.
  */
 export function createMinivest<FormModel>(
   formValue: Signal<Partial<FormModel>>,
   validationSuite: StaticSuite,
-  ngForm?: Signal<NgForm | undefined>,
 ): Signal<MinivestRunResult<FormModel>> {
+  const touchedFields = signal<Record<Path<FormModel>, boolean>>(
+    {} as Record<Path<FormModel>, boolean>,
+  );
+
   return computed((): MinivestRunResult<FormModel> => {
     const result = validationSuite(formValue());
-    const form = ngForm?.();
-
-    // Sync validation errors to NgForm if provided
-    if (form?.form) {
-      syncValidationErrorsToNgForm(form, result);
-    }
 
     // Create setValue function using the helper, but only if formValue is writable
     const setValue = isWritableSignal(formValue)
@@ -45,18 +38,39 @@ export function createMinivest<FormModel>(
           }
         };
 
+    const setTouched = (path?: Path<FormModel>) => {
+      if (!path) {
+        const allTouched = getAllPaths(formValue() || {}).reduce(
+          (acc: Record<Path<FormModel>, boolean>, pathStr: string) => {
+            acc[pathStr as Path<FormModel>] = true;
+            return acc;
+          },
+          {} as Record<Path<FormModel>, boolean>,
+        );
+        touchedFields.set(allTouched);
+        return;
+      }
+
+      touchedFields.set({ ...touchedFields(), [path]: true });
+    };
+
     return {
       ...result,
-      showErrors: (path?: Path<FormModel>) => {
-        if (path) {
-          // Show errors only if field has errors AND is touched (or no form provided)
-          if (form) {
-            const control = form.form.get(path);
-            return result.hasErrors(path) && (control?.touched ?? false);
-          }
-          return result.hasErrors(path);
-        }
-        return result.hasErrors();
+      touchedFields: touchedFields(),
+      showErrors: getAllPaths(formValue() || {}).reduce(
+        (acc: Record<Path<FormModel>, boolean>, path: string) => {
+          const typedPath = path as Path<FormModel>;
+          acc[typedPath] = result.hasErrors(typedPath) && (touchedFields()[typedPath] ?? false);
+          return acc;
+        },
+        {} as Record<Path<FormModel>, boolean>,
+      ),
+      setTouched,
+      submit: (event) => {
+        event.preventDefault();
+        setTouched();
+
+        return !!result.valid;
       },
       setValue,
     };
@@ -118,26 +132,31 @@ function isWritableSignal<T>(signal: Signal<T>): signal is WritableSignal<T> {
 }
 
 /**
- * Syncs Vest.js validation errors directly to NgForm controls.
- * This sets the validation errors from Vest.js onto the corresponding form controls,
- * maintaining the same structure as Vest.js validation results.
+ * Recursively collects all possible paths from a nested object.
+ * Returns an array of dot-separated path strings.
+ *
+ * @param obj - The object to extract paths from
+ * @param prefix - Current path prefix for recursion
+ * @returns Array of all possible paths in the object
  */
-function syncValidationErrorsToNgForm(ngForm: NgForm, vestResult: any): void {
-  const form = ngForm.form;
+function getAllPaths(obj: any, prefix: string = ''): string[] {
+  const paths: string[] = [];
 
-  // Set validation errors directly from Vest.js results
-  Object.keys(form.controls).forEach((fieldName) => {
-    const control = form.get(fieldName);
-    if (control) {
-      // Set errors directly from Vest.js (null if no errors)
-      if (vestResult.hasErrors(fieldName)) {
-        const errors = vestResult.getErrors(fieldName);
-        // Use 'vest' as the error key with the actual error message as the value
-        // This keeps it simple and maintains the Vest.js error structure
-        control.setErrors({ vest: errors[0] || 'Validation failed' });
-      } else {
-        control.setErrors(null);
+  if (obj === null || obj === undefined) {
+    return paths;
+  }
+
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      const currentPath = prefix ? `${prefix}.${key}` : key;
+      paths.push(currentPath);
+
+      // If the value is an object (but not null or array), recurse
+      if (typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key])) {
+        paths.push(...getAllPaths(obj[key], currentPath));
       }
     }
-  });
+  }
+
+  return paths;
 }

@@ -8,9 +8,9 @@
     </p>
 
     <!-- Form Column -->
-    <form (ngSubmit)="onSubmit()" class="space-y-6" #ngForm="ngForm">
+    <form (submit)="onSubmit($event)" class="space-y-6">
       <!-- Personal Information Section -->
-      <fieldset ngModelGroup="personalInfo" #personalInfoGroup="ngModelGroup" class="space-y-4">
+      <fieldset class="space-y-4">
         <legend class="text-lg font-semibold text-gray-800 border-b pb-2 mb-4">
           Personal Information
         </legend>
@@ -24,18 +24,18 @@
               type="text"
               id="firstName"
               name="firstName"
-              [ngModel]="formValue().personalInfo?.firstName"
-              (ngModelChange)="setValue('personalInfo.firstName', $event)"
+              (input)="setValue('personalInfo.firstName', $event.target.value)"
+              (blur)="setTouched('personalInfo.firstName')"
+              [value]="formValue().personalInfo?.firstName"
               placeholder="Enter first name"
               class="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              [class.border-red-500]="minivest().showErrors('personalInfo.firstName')"
-              [class.border-gray-300]="!minivest().showErrors('personalInfo.firstName')"
-              #firstNameInput="ngModel"
+              [class.border-red-500]="minivest().showErrors['personalInfo.firstName']"
+              [class.border-gray-300]="!minivest().showErrors['personalInfo.firstName']"
             />
 
-            @if (minivest().showErrors('personalInfo.firstName')) {
+            @if (minivest().showErrors['personalInfo.firstName']) {
               <div class="text-sm text-red-600">
-                <strong>Vest:</strong> {{ minivest().getErrors('personalInfo.firstName')[0] }}
+                {{ minivest().getErrors('personalInfo.firstName')[0] }}
               </div>
             }
           </div>
@@ -48,17 +48,18 @@
               type="text"
               id="lastName"
               name="lastName"
-              [ngModel]="formValue().personalInfo?.lastName"
-              (ngModelChange)="setValue('personalInfo.lastName', $event)"
+              [value]="formValue().personalInfo?.lastName"
+              (blur)="setTouched('personalInfo.lastName')"
+              (input)="setValue('personalInfo.lastName', $event.target.value)"
               placeholder="Enter last name"
               class="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              [class.border-red-500]="minivest().showErrors('personalInfo.lastName')"
-              [class.border-gray-300]="!minivest().showErrors('personalInfo.lastName')"
+              [class.border-red-500]="minivest().showErrors['personalInfo.lastName']"
+              [class.border-gray-300]="!minivest().showErrors['personalInfo.lastName']"
             />
 
-            @if (minivest().showErrors('personalInfo.lastName')) {
+            @if (minivest().showErrors['personalInfo.lastName']) {
               <div class="text-sm text-red-600">
-                <strong>Vest:</strong> {{ minivest().getErrors('personalInfo.lastName')[0] }}
+                {{ minivest().getErrors('personalInfo.lastName')[0] }}
               </div>
             }
           </div>
@@ -72,17 +73,18 @@
             type="email"
             id="email"
             name="email"
-            [ngModel]="formValue().personalInfo?.email"
-            (ngModelChange)="setValue('personalInfo.email', $event)"
+            [value]="formValue().personalInfo?.email"
+            (input)="setValue('personalInfo.email', $event.target.value)"
+            (blur)="setTouched('personalInfo.email')"
             placeholder="Enter email address"
             class="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            [class.border-red-500]="minivest().showErrors('personalInfo.email')"
-            [class.border-gray-300]="!minivest().showErrors('personalInfo.email')"
+            [class.border-red-500]="minivest().showErrors['personalInfo.email']"
+            [class.border-gray-300]="!minivest().showErrors['personalInfo.email']"
           />
 
-          @if (minivest().showErrors('personalInfo.email')) {
+          @if (minivest().showErrors['personalInfo.email']) {
             <div class="text-sm text-red-600">
-              <strong>Vest:</strong> {{ minivest().getErrors('personalInfo.email')[0] }}
+              {{ minivest().getErrors('personalInfo.email')[0] }}
             </div>
           }
         </div>
@@ -102,18 +104,18 @@
             type="text"
             id="street"
             name="street"
-            [ngModel]="formValue().addressInfo?.street"
-            (ngModelChange)="setValue('addressInfo.street', $event)"
+            [value]="formValue().addressInfo?.street"
+            (input)="setValue('addressInfo.street', $event.target.value)"
+            (blur)="setTouched('addressInfo.street')"
             placeholder="Enter street address"
             class="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            [class.border-red-500]="minivest().showErrors('addressInfo.street')"
-            [class.border-gray-300]="!minivest().showErrors('addressInfo.street')"
-            #streetInput="ngModel"
+            [class.border-red-500]="minivest().showErrors['addressInfo.street']"
+            [class.border-gray-300]="!minivest().showErrors['addressInfo.street']"
           />
 
-          @if (minivest().showErrors('addressInfo.street')) {
+          @if (minivest().showErrors['addressInfo.street']) {
             <div class="text-sm text-red-600">
-              <strong>Vest:</strong> {{ minivest().getErrors('addressInfo.street')[0] }}
+              {{ minivest().getErrors('addressInfo.street')[0] }}
             </div>
           }
         </div>
@@ -125,18 +127,18 @@
               type="text"
               id="city"
               name="city"
-              [ngModel]="formValue().addressInfo?.city"
-              (ngModelChange)="setValue('addressInfo.city', $event)"
+              [value]="formValue().addressInfo?.city"
+              (input)="setValue('addressInfo.city', $event.target.value)"
+              (blur)="setTouched('addressInfo.city')"
               placeholder="Enter city"
               class="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              [class.border-red-500]="minivest().showErrors('addressInfo.city')"
-              [class.border-gray-300]="!minivest().showErrors('addressInfo.city')"
-              #cityInput="ngModel"
+              [class.border-red-500]="minivest().showErrors['addressInfo.city']"
+              [class.border-gray-300]="!minivest().showErrors['addressInfo.city']"
             />
 
-            @if (minivest().showErrors('addressInfo.city')) {
+            @if (minivest().showErrors['addressInfo.city']) {
               <div class="text-sm text-red-600">
-                <strong>Vest:</strong> {{ minivest().getErrors('addressInfo.city')[0] }}
+                {{ minivest().getErrors('addressInfo.city')[0] }}
               </div>
             }
           </div>
@@ -149,18 +151,18 @@
               type="text"
               id="zipCode"
               name="zipCode"
-              [ngModel]="formValue().addressInfo?.zipCode"
-              (ngModelChange)="setValue('addressInfo.zipCode', $event)"
+              [value]="formValue().addressInfo?.zipCode"
+              (input)="setValue('addressInfo.zipCode', $event.target.value)"
+              (blur)="setTouched('addressInfo.zipCode')"
               placeholder="12345 or 12345-6789"
               class="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              [class.border-red-500]="minivest().showErrors('addressInfo.zipCode')"
-              [class.border-gray-300]="!minivest().showErrors('addressInfo.zipCode')"
-              #zipCodeInput="ngModel"
+              [class.border-red-500]="minivest().showErrors['addressInfo.zipCode']"
+              [class.border-gray-300]="!minivest().showErrors['addressInfo.zipCode']"
             />
 
-            @if (minivest().showErrors('addressInfo.zipCode')) {
+            @if (minivest().showErrors['addressInfo.zipCode']) {
               <div class="text-sm text-red-600">
-                <strong>Vest:</strong> {{ minivest().getErrors('addressInfo.zipCode')[0] }}
+                {{ minivest().getErrors('addressInfo.zipCode')[0] }}
               </div>
             }
           </div>
@@ -171,12 +173,11 @@
           <select
             id="country"
             name="country"
-            [ngModel]="formValue().addressInfo?.country"
-            (ngModelChange)="setValue('addressInfo.country', $event)"
+            [value]="formValue().addressInfo?.country"
+            (blur)="setTouched('addressInfo.country')"
             class="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            [class.border-red-500]="minivest().showErrors('addressInfo.country')"
-            [class.border-gray-300]="!minivest().showErrors('addressInfo.country')"
-            #countryInput="ngModel"
+            [class.border-red-500]="minivest().showErrors['addressInfo.country']"
+            [class.border-gray-300]="!minivest().showErrors['addressInfo.country']"
           >
             <option value="">Select a country</option>
             <option value="US">United States</option>
@@ -188,18 +189,12 @@
             <option value="OTHER">Other</option>
           </select>
 
-          @if (minivest().showErrors('addressInfo.country')) {
+          @if (minivest().showErrors['addressInfo.country']) {
             <div class="text-sm text-red-600">
-              <strong>Vest:</strong> {{ minivest().getErrors('addressInfo.country')[0] }}
+              {{ minivest().getErrors('addressInfo.country')[0] }}
             </div>
           }
         </div>
-
-        @if (addressInfoGroup.invalid && (addressInfoGroup.touched || ngForm.submitted)) {
-          <div class="text-sm text-orange-600 bg-orange-50 p-2 rounded">
-            <strong>NgForm Group:</strong> Address Info has validation errors
-          </div>
-        }
       </fieldset>
 
       <!-- Preferences Section -->
@@ -214,10 +209,10 @@
               type="checkbox" 
               id="newsletter"
               name="newsletter"
-              [ngModel]="formValue().preferences?.newsletter"
-              (ngModelChange)="setValue('preferences.newsletter', $event)"
+              (input)="setValue('preferences.newsletter', $event.target.checked)"
+              (blur)="setTouched('preferences.newsletter')"
               class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-              #newsletterInput="ngModel" />
+            />
             <label class="text-sm font-medium text-gray-700" for="newsletter">
               Subscribe to newsletter
             </label>
@@ -243,12 +238,12 @@
         type="submit"
         class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-medium py-2 px-4 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
       >
-        Submit Nested Form
+        Submit
       </button>
     </form>
   </div>
 
     <!-- Debugger Column -->
-    <app-debugger [formValue]="formValue()" [ngForm]="ngForm" [minivest]="minivest()">
+    <app-debugger [formValue]="formValue()" [minivest]="minivest()">
     </app-debugger>
 </div>

@@ -3,11 +3,11 @@ import { StaticSuite } from 'vest';
 type StaticSuiteRunResult = ReturnType<StaticSuite>;
 
 export type MinivestRunResult<FormModel> = StaticSuiteRunResult & {
-  /** Convenience method to update form field values */
   setValue(path: Path<FormModel>, value: PathValue<FormModel, Path<FormModel>>): void;
-
-  /** Check if errors should be shown (optionally for specific field with touch-aware behavior) */
-  showErrors: (path?: Path<FormModel>) => boolean;
+  touchedFields: Record<Path<FormModel>, boolean>;
+  setTouched(path?: Path<FormModel>): void;
+  showErrors: Record<Path<FormModel>, boolean>;
+  submit(event: SubmitEvent): boolean;
 };
 
 export type Path<T> = T extends object

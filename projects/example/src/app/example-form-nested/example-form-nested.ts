@@ -1,5 +1,5 @@
-import { Component, inject, signal, viewChild } from '@angular/core';
-import { FormsModule, NgForm } from '@angular/forms';
+import { Component, inject, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { createMinivest, Path, PathValue } from 'ngx-minivest';
 import { Debugger } from '../debugger/debugger';
 import { LoggingService } from '../shared/logging.service';
@@ -9,10 +9,10 @@ import { nestedValidationSuite } from './example-form-nested.validations';
 @Component({
   selector: 'app-example-form-nested',
   imports: [FormsModule, Debugger],
+  providers: [LoggingService],
   templateUrl: './example-form-nested.html',
 })
 export class ExampleFormNested {
-  protected readonly ngForm = viewChild(NgForm);
   protected readonly logger = inject(LoggingService);
   protected readonly Object = Object; // Make Object available in template
 
@@ -35,8 +35,7 @@ export class ExampleFormNested {
     },
   });
 
-  // Computed signal for vest validation results with NgForm sync (using type assertion for compatibility)
-  protected readonly minivest = createMinivest(this.formValue, nestedValidationSuite, this.ngForm);
+  protected readonly minivest = createMinivest(this.formValue, nestedValidationSuite);
 
   setValue(path: Path<NestedFormModel>, value: PathValue<NestedFormModel, Path<NestedFormModel>>) {
     this.logger.log(`Field on path '${path}' changed`, {
@@ -49,23 +48,20 @@ export class ExampleFormNested {
     this.minivest().setValue(path, value);
   }
 
-  onSubmit() {
-    this.ngForm()?.control.markAllAsTouched(); // mark all fields as touched to show NgForm errors
-    this.ngForm()?.control.markAllAsDirty(); // mark all fields as dirty to show NgForm errors
+  setTouched(path: Path<NestedFormModel>) {
+    this.logger.log(`Field on path '${path}' touched`, { path });
+    this.minivest().setTouched(path);
+  }
 
+  onSubmit(event: SubmitEvent) {
     this.logger.log('Nested form submitted', this.formValue());
-    const result = nestedValidationSuite(this.formValue());
-    this.logger.log('Vest validation result', {
-      valid: this.minivest().valid,
-      hasErrors: this.minivest().hasErrors(),
-      errorCount: this.minivest().errorCount,
-    });
+    const isValid = this.minivest().submit(event);
 
-    if (this.minivest().valid) {
+    if (isValid) {
       this.logger.log('✅ Nested form validation passed - ready to submit');
     } else {
       this.logger.log('❌ Nested form validation failed', {
-        errors: result.getErrors(),
+        errors: this.minivest().getErrors(),
       });
     }
   }

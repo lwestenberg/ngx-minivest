@@ -1,7 +1,6 @@
 import { KeyValuePipe } from '@angular/common';
-import { Component, inject, model, viewChild } from '@angular/core';
-import { FormsModule, NgForm } from '@angular/forms';
-import { createMinivest } from 'ngx-minivest';
+import { Component, inject, model } from '@angular/core';
+import { createMinivest, Path, PathValue } from 'ngx-minivest';
 import { Debugger } from '../debugger/debugger';
 import { LoggingService } from '../shared/logging.service';
 import { FormArrayModel } from './example-form-array.model';
@@ -17,11 +16,11 @@ function arrayToObject<T>(arr: T[]): { [key: number]: T } {
 
 @Component({
   selector: 'app-example-form-array',
-  imports: [FormsModule, KeyValuePipe, Debugger],
+  imports: [KeyValuePipe, Debugger],
+  providers: [LoggingService],
   templateUrl: './example-form-array.html',
 })
 export class ExampleFormArray {
-  protected readonly ngForm = viewChild(NgForm);
   protected readonly logger = inject(LoggingService);
 
   // Expose Object for use in template
@@ -34,7 +33,7 @@ export class ExampleFormArray {
   });
 
   // Computed signal for vest validation results with NgForm sync
-  protected readonly minivest = createMinivest(this.formValue, validationSuite, this.ngForm);
+  protected readonly minivest = createMinivest(this.formValue, validationSuite);
 
   // TrackBy function for ngFor performance
   protected readonly tracker = (index: number) => index;
@@ -42,22 +41,22 @@ export class ExampleFormArray {
   /**
    * Helper method to check errors for dynamic field paths
    */
-  protected hasInterestError(key: string): boolean {
-    return this.minivest().hasErrors(`interests.${key}` as any);
+  protected hasInterestError(key: keyof FormArrayModel['interests']): boolean {
+    return this.minivest().hasErrors(`interests.${key}`);
   }
 
   /**
    * Helper method to show errors for dynamic field paths (touch-aware)
    */
-  protected showInterestError(key: string): boolean {
-    return this.minivest().showErrors(`interests.${key}` as any);
+  protected showInterestError(key: keyof FormArrayModel['interests']): boolean {
+    return this.minivest().showErrors[`interests.${key}`];
   }
 
   /**
    * Helper method to get errors for dynamic field paths
    */
-  protected getInterestErrors(key: string): string[] {
-    return this.minivest().getErrors(`interests.${key}` as any) || [];
+  protected getInterestErrors(key: keyof FormArrayModel['interests']): string[] {
+    return this.minivest().getErrors(`interests.${key}`) || [];
   }
 
   /**
@@ -67,9 +66,9 @@ export class ExampleFormArray {
     return Object.keys(this.formValue().interests || {}).length;
   }
 
-  setValue(path: string, value: any) {
+  setValue(path: Path<FormArrayModel>, value: PathValue<FormArrayModel, Path<FormArrayModel>>) {
     this.logger.log(`Field on path '${path}' changed`, { path, value });
-    this.minivest().setValue(path as any, value);
+    this.minivest().setValue(path, value);
   }
 
   /**
@@ -136,22 +135,16 @@ export class ExampleFormArray {
     });
   }
 
-  onSubmit() {
-    const form = this.ngForm();
-    if (form) {
-      form.control.markAllAsTouched(); // mark all fields as touched to show NgForm errors
-      form.control.markAllAsDirty(); // mark all fields as dirty to show NgForm errors
-    }
+  setTouched(path: Path<FormArrayModel>) {
+    this.logger.log(`Field on path '${path}' touched`, { path });
+    this.minivest().setTouched(path);
+  }
 
+  onSubmit(event: SubmitEvent) {
     this.logger.log('Form submitted', this.formValue());
-    const result = validationSuite(this.formValue());
-    this.logger.log('Vest validation result', {
-      valid: this.minivest().valid,
-      hasErrors: this.minivest().hasErrors(),
-      errorCount: this.minivest().errorCount,
-    });
+    const valid = this.minivest().submit(event);
 
-    if (this.minivest().valid) {
+    if (valid) {
       this.logger.log('✅ Form validation passed - ready to submit');
       // Here you would typically send the data to a server
       // Note: Convert interests object back to array if needed for API
@@ -162,7 +155,7 @@ export class ExampleFormArray {
       this.logger.log('📤 Submitting data:', submitData);
     } else {
       this.logger.log('❌ Form validation failed', {
-        errors: result.getErrors(),
+        errors: this.minivest().getErrors(),
       });
     }
   }

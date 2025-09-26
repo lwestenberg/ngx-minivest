@@ -7,7 +7,7 @@
       Vest.js validation.
     </p>
 
-    <form (ngSubmit)="onSubmit()" class="space-y-4" #ngForm="ngForm">
+    <form (submit)="onSubmit($event)" class="space-y-4">
       <div class="space-y-2">
         <label class="block text-sm font-medium text-gray-700" for="email">
           E-mail address:
@@ -16,18 +16,18 @@
           type="email"
           id="email"
           name="email"
-          [ngModel]="formValue().email"
-          (ngModelChange)="setValue('email', $event)"
+          [value]="formValue().email"
+          (input)="setValue('email', $event.target.value)"
+          (blur)="setTouched('email')"
           placeholder="Enter your email address"
           class="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          [class.border-red-500]="minivest().showErrors('email')"
-          [class.border-gray-300]="!minivest().showErrors('email')"
-          #emailInput="ngModel"
+          [class.border-red-500]="minivest().showErrors.email"
+          [class.border-gray-300]="!minivest().showErrors.email"
         />
 
-        @if (minivest().showErrors('email')) {
+        @if (minivest().showErrors.email) {
           <div class="text-sm text-red-600">
-            <strong>Vest:</strong> {{ minivest().getErrors('email')[0] }}
+            {{ minivest().getErrors('email')[0] }}
           </div>
         }
       </div>
@@ -40,18 +40,18 @@
           type="email"
           id="verifyEmail"
           name="verifyEmail"
-          [ngModel]="formValue().verifyEmail"
-          (ngModelChange)="setValue('verifyEmail', $event)"
+          [value]="formValue().verifyEmail"
+          (input)="setValue('verifyEmail', $event.target.value)"
+          (blur)="setTouched('verifyEmail')"
           placeholder="Re-enter your email address"
           class="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          [class.border-red-500]="minivest().showErrors('verifyEmail')"
-          [class.border-gray-300]="!minivest().showErrors('verifyEmail')"
-          #verifyEmailInput="ngModel"
+          [class.border-red-500]="minivest().showErrors.verifyEmail"
+          [class.border-gray-300]="!minivest().showErrors.verifyEmail"
         />
 
-        @if (minivest().showErrors('verifyEmail')) {
+        @if (minivest().showErrors.verifyEmail) {
           <div class="text-sm text-red-600">
-            <strong>Vest:</strong> {{ minivest().getErrors('verifyEmail')[0] }}
+            {{ minivest().getErrors('verifyEmail')[0] }}
           </div>
         }
       </div>
@@ -66,6 +66,6 @@
     </div>
 
     <!-- Debugger Column -->
-    <app-debugger [formValue]="formValue()" [ngForm]="ngForm" [minivest]="minivest()">
+    <app-debugger [formValue]="formValue()" [minivest]="minivest()">
     </app-debugger>
 </div>

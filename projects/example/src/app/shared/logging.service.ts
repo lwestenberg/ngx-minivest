@@ -6,9 +6,7 @@ export interface LogEntry {
   data?: any;
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class LoggingService {
   readonly #logs = signal<LogEntry[]>([]);
 
