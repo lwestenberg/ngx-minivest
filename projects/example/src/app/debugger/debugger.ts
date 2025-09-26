@@ -1,20 +1,14 @@
-import { DatePipe, JsonPipe } from '@angular/common';
-import { Component, inject, input } from '@angular/core';
+import { JsonPipe } from '@angular/common';
+import { Component, input } from '@angular/core';
 import { MinivestRunResult } from 'ngx-minivest';
-import { LoggingService } from '../shared/logging.service';
 
 @Component({
   selector: 'app-debugger',
-  imports: [DatePipe, JsonPipe],
+  imports: [JsonPipe],
   templateUrl: './debugger.html',
   styleUrl: './debugger.css',
 })
 export class Debugger<T = unknown> {
   readonly formValue = input.required<Partial<T>>();
   readonly minivest = input.required<MinivestRunResult<T>>();
-  protected readonly logger = inject(LoggingService);
-
-  clearLogs() {
-    this.logger.clear();
-  }
 }

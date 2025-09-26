@@ -1,4 +1,4 @@
-import { computed, isDevMode, signal, type Signal, type WritableSignal } from '@angular/core';
+import { computed, signal, type Signal, type WritableSignal } from '@angular/core';
 import type { StaticSuite } from 'vest';
 import { MinivestRunResult, Path, PathValue } from './types';
 
@@ -31,11 +31,9 @@ export function createMinivest<FormModel>(
     const setValue = isWritableSignal(formValue)
       ? createSetValue(formValue)
       : <F>(path: Path<F>, value: PathValue<F, Path<F>>) => {
-          if (isDevMode()) {
-            console.warn(
-              'Cannot setValue on a readonly signal. Pass a WritableSignal to enable setValue functionality.',
-            );
-          }
+          console.log(
+            'Cannot setValue on a readonly signal. Pass a WritableSignal to enable setValue functionality.',
+          );
         };
 
     const setTouched = (path?: Path<FormModel>) => {

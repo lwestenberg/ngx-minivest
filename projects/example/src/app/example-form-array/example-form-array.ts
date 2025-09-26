@@ -1,8 +1,7 @@
 import { KeyValuePipe } from '@angular/common';
-import { Component, inject, model } from '@angular/core';
+import { Component, model } from '@angular/core';
 import { createMinivest, Path, PathValue } from 'ngx-minivest';
 import { Debugger } from '../debugger/debugger';
-import { LoggingService } from '../shared/logging.service';
 import { FormArrayModel } from './example-form-array.model';
 import { validationSuite } from './example-form-array.validation';
 
@@ -17,12 +16,9 @@ function arrayToObject<T>(arr: T[]): { [key: number]: T } {
 @Component({
   selector: 'app-example-form-array',
   imports: [KeyValuePipe, Debugger],
-  providers: [LoggingService],
   templateUrl: './example-form-array.html',
 })
 export class ExampleFormArray {
-  protected readonly logger = inject(LoggingService);
-
   // Expose Object for use in template
   protected readonly Object = Object;
 
@@ -67,7 +63,7 @@ export class ExampleFormArray {
   }
 
   setValue(path: Path<FormArrayModel>, value: PathValue<FormArrayModel, Path<FormArrayModel>>) {
-    this.logger.log(`Field on path '${path}' changed`, { path, value });
+    console.log(`Field on path '${path}' changed`, { path, value });
     this.minivest().setValue(path, value);
   }
 
@@ -81,14 +77,14 @@ export class ExampleFormArray {
     const addInterestValidation = validationSuite(currentFormValue, 'addInterest');
 
     if (addInterestValidation.hasErrors('addInterest')) {
-      this.logger.log('❌ Cannot add interest - validation failed', {
+      console.log('❌ Cannot add interest - validation failed', {
         errors: addInterestValidation.getErrors('addInterest'),
       });
       return;
     }
 
     if (!currentFormValue.addInterest?.trim()) {
-      this.logger.log('❌ Cannot add empty interest');
+      console.log('❌ Cannot add empty interest');
       return;
     }
 
@@ -102,7 +98,7 @@ export class ExampleFormArray {
     // Update form value
     this.minivest().setValue('interests', interests);
 
-    this.logger.log('✅ Interest added successfully', {
+    console.log('✅ Interest added successfully', {
       newInterest: currentFormValue.addInterest,
       totalInterests: newInterests.length,
     });
@@ -116,7 +112,7 @@ export class ExampleFormArray {
     const existingInterests = Object.values(currentFormValue.interests || {});
 
     if (existingInterests.length === 0) {
-      this.logger.log('❌ No interests to remove');
+      console.log('❌ No interests to remove');
       return;
     }
 
@@ -129,32 +125,32 @@ export class ExampleFormArray {
     // Update form value
     this.minivest().setValue('interests', interests);
 
-    this.logger.log('✅ Interest removed successfully', {
+    console.log('✅ Interest removed successfully', {
       removedIndex: key,
       remainingInterests: newInterests.length,
     });
   }
 
   setTouched(path: Path<FormArrayModel>) {
-    this.logger.log(`Field on path '${path}' touched`, { path });
+    console.log(`Field on path '${path}' touched`, { path });
     this.minivest().setTouched(path);
   }
 
   onSubmit(event: SubmitEvent) {
-    this.logger.log('Form submitted', this.formValue());
+    console.log('Form submitted', this.formValue());
     const valid = this.minivest().submit(event);
 
     if (valid) {
-      this.logger.log('✅ Form validation passed - ready to submit');
+      console.log('✅ Form validation passed - ready to submit');
       // Here you would typically send the data to a server
       // Note: Convert interests object back to array if needed for API
       const submitData = {
         ...this.formValue(),
         interests: Object.values(this.formValue().interests || {}),
       };
-      this.logger.log('📤 Submitting data:', submitData);
+      console.log('📤 Submitting data:', submitData);
     } else {
-      this.logger.log('❌ Form validation failed', {
+      console.log('❌ Form validation failed', {
         errors: this.minivest().getErrors(),
       });
     }
